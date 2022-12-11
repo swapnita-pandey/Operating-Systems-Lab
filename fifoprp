@@ -1,0 +1,59 @@
+#include <stdio.h>
+void fifo(int n, int pages[], int frames) //n - no. of pages
+{
+    int pf = 0;
+    int i, j, k;
+    int frame[frames];
+
+    for(i = 0; i < frames; i++)
+    {
+        frame[i] = -1;
+    }
+
+    for(i = 0; i < n; i++)
+    {
+        k = 0;
+        for(j = 0; j < frames; j++)
+        {
+            if(pages[i] == frame[j])
+            {
+                k++;
+                pf--;
+            }
+        }
+        pf++;
+        if((pf <= frames) && (k == 0))
+        {
+            frame[i] = pages[i];
+        }
+        else if(k == 0)
+        {
+            frame[(pf - 1) % frames] = pages[i];
+        }
+        printf("\n");
+        printf("%d\t\t", pages[i]);
+        for(j = 0; j < frames; j++)
+        {
+            if(frame[j] != -1)
+                printf(" %d\t\t", frame[j]);
+            else
+                printf(" - \t\t");
+        }
+    }
+    printf("\nTotal number of page faults: %d\n", pf);
+}
+int main()
+{
+    int c, n;
+    printf("Enter frame capacity: ");
+    scanf("%d", &c);
+    printf("Enter the number of pages: ");
+    scanf("%d", &n);
+    int a[n];
+    printf("Enter the values: ");
+    for(int i = 0; i < n; i++)
+    {
+    scanf("%d", &a[i]);
+    }
+    fifo(n, a, c);
+}
