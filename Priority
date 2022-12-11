@@ -1,0 +1,54 @@
+#include <stdio.h>
+int main()
+{
+    int n;
+    printf("Enter the no. of process");
+    scanf("%d",&n);
+
+    int arr[n][3],burst[n];
+
+    for(int i=0;i<n;i++)
+    {
+        printf("\n enter the arrival, burst time and priority number for the %dth process\t",i+1);
+        scanf("%d %d %d", &arr[i][0], &arr[i][1], &arr[i][2]);
+        burst[i] = arr[i][1];
+    }
+
+    int wait[n], tat[n], prev[n];
+    int t = 0, averageTAT = 0, averageWait = 0;
+    while(1)
+    {
+        int ind = 0, mini = -100000;
+
+        //Finding maximum priority
+        for(int i = 0; i < n; i++)      // t is completion time of prev process
+        {
+            if(t >= arr[i][0] && arr[i][1] > 0 && mini < arr[i][2])
+            {
+                mini = arr[i][2];
+                ind = i;
+            }
+        }
+
+        if(mini == -100000)     // All process are completed
+            break;
+        arr[ind][1]  = arr[ind][1] - 1;
+        t++;
+        tat[ind] = t;       // completion time
+    }
+    for(int i = 0; i < n; i++)
+    {
+        tat[i] = tat[i] - arr[i][0];
+        wait[i]=tat[i]-burst[i];
+        averageTAT+=tat[i];
+        averageWait+=wait[i];
+    }
+    double a = averageTAT / (1.0*n), b = averageWait / (1.0*n);
+    printf("Process no.\t Arrival time \t Burst Time\t Priority_no \t Waiting Time \t Turnaround Time\n");
+    for(int i = 0; i < n; i++)
+    {
+        printf("%d\t\t %d\t\t %d \t\t %d \t\t%d\t\t%d\n",i+1,arr[i][0],burst[i],arr[i][2],wait[i],tat[i]); 
+    }
+    printf("The average wait time is: %lf and the average turn around time is: %lf",b,a);
+    return 0;
+}
