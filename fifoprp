@@ -2,7 +2,7 @@
 void fifo(int n, int pages[], int frames) //n - no. of pages
 {
     int pf = 0;
-    int i, j, k;
+    int i, j, flag;
     int frame[frames];
 
     for(i = 0; i < frames; i++)
@@ -10,38 +10,30 @@ void fifo(int n, int pages[], int frames) //n - no. of pages
         frame[i] = -1;
     }
 
-    for(i = 0; i < n; i++)
+    j = 0;
+    printf("Reference String \t page frames\n");
+    for (i = 0; i < n; i++)
     {
-        k = 0;
-        for(j = 0; j < frames; j++)
+        printf("%d \t\t", pages[i]);
+        flag = 0;
+        for (int k = 0; k < frames; k++)
+            if (frame[k] == pages[i])       // Hit
+                flag = 1;
+
+        if (flag == 0)      // Miss
         {
-            if(pages[i] == frame[j])
-            {
-                k++;
-                pf--;
-            }
-        }
-        pf++;
-        if((pf <= frames) && (k == 0))
-        {
-            frame[i] = pages[i];
-        }
-        else if(k == 0)
-        {
-            frame[(pf - 1) % frames] = pages[i];
+            frame[j] = pages[i];
+            j = (j + 1) % frames;
+            pf++;
+            for (int k = 0; k < frames; k++)
+                printf("%d\t", frame[k]);
+            printf("\n");
         }
         printf("\n");
-        printf("%d\t\t", pages[i]);
-        for(j = 0; j < frames; j++)
-        {
-            if(frame[j] != -1)
-                printf(" %d\t\t", frame[j]);
-            else
-                printf(" - \t\t");
-        }
     }
-    printf("\nTotal number of page faults: %d\n", pf);
+    printf("Page Fault Is %d", pf);
 }
+
 int main()
 {
     int c, n;
